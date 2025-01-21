@@ -1,0 +1,75 @@
+/* 基础样式 */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    overflow: hidden;
+}
+
+.game-container {
+    text-align: center;
+    width: 100%;
+    max-width: 480px; /* 限制游戏容器最大宽度 */
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 保证内容居中 */
+}
+
+#game-board {
+    border: 2px solid #333;
+    background-color: #fff;
+    width: 100%;
+    height: 360px; /* 固定高度，防止拉伸 */
+}
+
+#score, #high-score {
+    font-size: 24px;
+    color: #333;
+    margin-top: 10px;
+}
+
+#startButton, #pause {
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    background-color: #f39c12;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* 使按钮宽度自适应 */
+    box-sizing: border-box;
+}
+
+#startButton:hover, #pause:hover {
+    background-color: #e67e22;
+}
+
+.controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 80px; /* 给按钮一个最小宽度 */
+}
+
+.controls button:hover {
+    background-color: #2980b9;
+}
