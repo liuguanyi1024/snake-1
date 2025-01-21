@@ -94,7 +94,7 @@ canvas.addEventListener("touchend", event => {
 
 // 移动逻辑：控制蛇的移动
 let lastUpdateTime = 0;
-const moveInterval = 100; // 蛇的移动间隔时间（毫秒）
+const moveInterval = 130; // 蛇的移动间隔时间（毫秒）
 
 function gameLoop(currentTime) {
     // 控制蛇的移动速度
