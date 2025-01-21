@@ -1,0 +1,136 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // 游戏参数
+    const gridSize = 20; // 网格大小
+    const rows = canvas.height / gridSize;
+    const cols = canvas.width / gridSize;
+
+    let snake = [{ x: 10, y: 10 }];
+    let food = { x: 15, y: 15 };
+    let direction = { x: 0, y: 0 };
+    let score = 0;
+    let highScore = localStorage.getItem("highScore") || 0;
+    let gameInterval = null;
+
+    // 显示分数
+    const scoreDisplay = document.getElementById("score");
+    const highScoreDisplay = document.getElementById("highScore");
+    scoreDisplay.textContent = score;
+    highScoreDisplay.textContent = highScore;
+
+    // 更新游戏
+    function updateGame() {
+        // 更新蛇的位置
+        const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+        // 撞墙或撞自己结束游戏
+        if (
+            head.x < 0 ||
+            head.y < 0 ||
+            head.x >= cols ||
+            head.y >= rows ||
+            snake.some(segment => segment.x === head.x && segment.y === head.y)
+        ) {
+            clearInterval(gameInterval);
+            alert("游戏结束！你的分数是：" + score);
+            resetGame();
+            return;
+        }
+
+        snake.unshift(head);
+
+        // 吃到食物
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            scoreDisplay.textContent = score;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("highScore", highScore);
+                highScoreDisplay.textContent = highScore;
+            }
+            placeFood();
+        } else {
+            snake.pop(); // 移除尾部
+        }
+
+        renderGame();
+    }
+
+    // 绘制游戏
+    function renderGame() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 绘制蛇
+        ctx.fillStyle = "green";
+        snake.forEach(segment => {
+            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        });
+
+        // 绘制食物
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    }
+
+    // 随机放置食物
+    function placeFood() {
+        food = {
+            x: Math.floor(Math.random() * cols),
+            y: Math.floor(Math.random() * rows),
+        };
+
+        // 确保食物不会出现在蛇身上
+        if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+            placeFood();
+        }
+    }
+
+    // 处理键盘输入
+    document.addEventListener("keydown", event => {
+        switch (event.key) {
+            case "ArrowUp":
+                if (direction.y === 0) direction = { x: 0, y: -1 };
+                break;
+            case "ArrowDown":
+                if (direction.y === 0) direction = { x: 0, y: 1 };
+                break;
+            case "ArrowLeft":
+                if (direction.x === 0) direction = { x: -1, y: 0 };
+                break;
+            case "ArrowRight":
+                if (direction.x === 0) direction = { x: 1, y: 0 };
+                break;
+        }
+    });
+
+    // 启动游戏
+    function startGame() {
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(updateGame, 150);
+    }
+
+    // 暂停游戏
+    function pauseGame() {
+        clearInterval(gameInterval);
+        gameInterval = null;
+    }
+
+    // 重置游戏
+    function resetGame() {
+        snake = [{ x: 10, y: 10 }];
+        direction = { x: 0, y: 0 };
+        score = 0;
+        scoreDisplay.textContent = score;
+        placeFood();
+        renderGame();
+    }
+
+    // 按钮事件
+    document.getElementById("startButton").addEventListener("click", startGame);
+    document.getElementById("pauseButton").addEventListener("click", pauseGame);
+
+    // 初始化
+    resetGame();
+});
